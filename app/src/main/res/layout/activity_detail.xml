@@ -27,6 +27,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="13sp" />
+    <TextView
+        android:id="@+id/tvGhiChu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="13sp"/>
 
     <EditText
         android:id="@+id/edtHoTenMoi"
@@ -58,6 +64,35 @@
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/cancel" />
+        <Button
+            android:id="@+id/btnThemGhiChu"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/btnThemghichu"
+            />
+
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Danh sách liên hệ trong mảng (NC2):"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#2196F3" /> <!-- Màu xanh cho nổi bật -->
+
+    <!-- THÊM MỚI: Ô hiển thị toàn bộ danh sách -->
+    <TextView
+        android:id="@+id/tvDanhSach"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#F5F5F5"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:text="Đang tải danh sách..." />
 </LinearLayout>
 

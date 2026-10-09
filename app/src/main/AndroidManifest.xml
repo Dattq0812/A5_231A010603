@@ -25,6 +25,7 @@
             android:name=".DetailActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".NoteActivity" />
     </application>
 
 </manifest>

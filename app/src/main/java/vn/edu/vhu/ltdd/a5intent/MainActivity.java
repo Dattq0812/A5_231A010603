@@ -21,27 +21,40 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
-    // TODO: thay 2201234567 bằng MSSV của bạn
+    // Thay bằng MSSV của bạn
     private static final String TAG = "A5_231A010603";
 
-    /** Khóa dùng chung cho hai màn hình — luôn khai báo hằng số, không gõ chuỗi hai lần. */
     public static final String EXTRA_CONTACT = "extra_contact";
     public static final String EXTRA_NGUOI_GUI = "extra_nguoi_gui";
+    public static final String EXTRA_DANH_SACH = "extra_danh_sach";
 
     private EditText edtHoTen, edtDienThoai, edtEmail;
     private TextView tvKetQuaTraVe;
 
-    /** Bộ nhận kết quả trả về từ DetailActivity (thay cho onActivityResult đã lỗi thời). */
+    // Bộ nhận kết quả trả về từ DetailActivity
     private final ActivityResultLauncher<Intent> chiTietLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Contact daSua = IntentCompat.getParcelableExtra(
-                            result.getData(), EXTRA_CONTACT, Contact.class);
-                    if (daSua != null) {
+                    // Đọc danh sách trả về từ Màn hình 2
+                    java.util.ArrayList<Contact> danhSachTraVe = IntentCompat.getParcelableArrayListExtra(
+                            result.getData(), EXTRA_DANH_SACH, Contact.class);
+
+                    if (danhSachTraVe != null && !danhSachTraVe.isEmpty()) {
+                        // Lấy phần tử đầu tiên ra để kiểm tra xem đã được Màn hình 2 và 3 cập nhật chưa
+                        Contact daSua = danhSachTraVe.get(0);
+
                         edtHoTen.setText(daSua.getHoTen());
-                        tvKetQuaTraVe.setText(getString(R.string.returned, daSua.getHoTen()));
-                        Log.d(TAG, "Nhận kết quả trả về: " + daSua.getHoTen());
+
+                        String textTraVe = "Nhận về danh sách có " + danhSachTraVe.size() + " liên hệ.\n";
+                        textTraVe += "Cập nhật liên hệ 1: " + daSua.getHoTen();
+
+                        if (daSua.getGhiChu() != null && !daSua.getGhiChu().trim().isEmpty()) {
+                            textTraVe += "\nGhi chú từ MH3: " + daSua.getGhiChu();
+                        }
+
+                        tvKetQuaTraVe.setText(textTraVe);
+                        Log.d(TAG, "Đã nhận danh sách trả về!");
                     }
                 } else {
                     tvKetQuaTraVe.setText(R.string.returned_cancel);
@@ -53,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
@@ -73,44 +87,7 @@ public class MainActivity extends AppCompatActivity {
         btnGoi.setOnClickListener(v -> goiDien());
         btnWeb.setOnClickListener(v -> moTrangWeb());
         btnChiaSe.setOnClickListener(v -> chiaSe());
-        Log.d(TAG,"onCreate Main");
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "MainActivity - onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "MainActivity - onResume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "MainActivity - onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "MainActivity - onStop");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "MainActivity - onRestart");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "MainActivity - onDestroy");
-    }
-    // ============ INTENT TƯỜNG MINH (explicit) ============
 
     private void moManHinhChiTiet() {
         String hoTen = edtHoTen.getText().toString().trim();
@@ -118,17 +95,27 @@ public class MainActivity extends AppCompatActivity {
             edtHoTen.setError(getString(R.string.err_empty));
             return;
         }
-        Contact contact = new Contact(hoTen,
+
+        // Tạo phần tử người dùng nhập
+        Contact contactThuc = new Contact(
+                hoTen,
                 edtDienThoai.getText().toString().trim(),
-                edtEmail.getText().toString().trim());
+                edtEmail.getText().toString().trim(),
+                ""
+        );
+
+        // ===== CẬP NHẬT NC2: Tạo danh sách =====
+        java.util.ArrayList<Contact> danhSach = new java.util.ArrayList<>();
+        danhSach.add(contactThuc); // Phần tử số 0 (sẽ mang đi chỉnh sửa)
+        danhSach.add(new Contact("Người Ảo Số 1", "0111", "ao1@vhu.edu.vn", "")); // Data giả
+        danhSach.add(new Contact("Người Ảo Số 2", "0222", "ao2@vhu.edu.vn", "")); // Data giả
 
         Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(EXTRA_CONTACT, contact);          // đóng gói cả đối tượng
-        intent.putExtra(EXTRA_NGUOI_GUI, TAG);            // dữ liệu đơn giản kèm theo
-        chiTietLauncher.launch(intent);                   // mở và CHỜ kết quả trả về
-    }
+        intent.putParcelableArrayListExtra(EXTRA_DANH_SACH, danhSach);
+        intent.putExtra(EXTRA_NGUOI_GUI, TAG);
 
-    // ============ INTENT NGẦM ĐỊNH (implicit) ============
+        chiTietLauncher.launch(intent);
+    }
 
     private void goiDien() {
         String sdt = edtDienThoai.getText().toString().trim();
@@ -136,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
             edtDienThoai.setError(getString(R.string.err_empty));
             return;
         }
-        // ACTION_DIAL chỉ mở màn hình gọi với số đã điền sẵn → KHÔNG cần xin quyền
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + sdt));
         moAnToan(intent);
     }
@@ -152,14 +138,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
         intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text,
                 edtHoTen.getText().toString(), edtDienThoai.getText().toString()));
-        // Bọc trong bộ chọn để người dùng tự chọn ứng dụng
         startActivity(Intent.createChooser(intent, getString(R.string.share_title)));
     }
 
-    /**
-     * Từ Android 11, resolveActivity() thường trả về null do cơ chế giới hạn hiển thị gói
-     * (package visibility). Cách an toàn nhất là bắt ngoại lệ ActivityNotFoundException.
-     */
     private void moAnToan(Intent intent) {
         try {
             startActivity(intent);
@@ -169,4 +150,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-

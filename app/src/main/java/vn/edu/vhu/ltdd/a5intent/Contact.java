@@ -13,11 +13,14 @@ public class Contact implements Parcelable {
     private String hoTen;
     private String dienThoai;
     private String email;
+    // Thêm thuộc tính NC1
+    private String ghiChu;
 
-    public Contact(String hoTen, String dienThoai, String email) {
+    public Contact(String hoTen, String dienThoai, String email, String ghiChu) {
         this.hoTen = hoTen;
         this.dienThoai = dienThoai;
         this.email = email;
+        this.ghiChu = ghiChu;
     }
 
     /** Đọc lại dữ liệu ĐÚNG THỨ TỰ đã ghi trong writeToParcel. */
@@ -25,6 +28,7 @@ public class Contact implements Parcelable {
         hoTen = in.readString();
         dienThoai = in.readString();
         email = in.readString();
+        ghiChu = in.readString();; //NC1
     }
 
     @Override
@@ -32,6 +36,7 @@ public class Contact implements Parcelable {
         dest.writeString(hoTen);
         dest.writeString(dienThoai);
         dest.writeString(email);
+        dest.writeString(ghiChu);
     }
 
     @Override
@@ -54,7 +59,10 @@ public class Contact implements Parcelable {
     public String getHoTen() { return hoTen; }
     public String getDienThoai() { return dienThoai; }
     public String getEmail() { return email; }
+    public  String getGhiChu(){return ghiChu; }
+
 
     public void setHoTen(String hoTen) { this.hoTen = hoTen; }
+    public void setGhiChu(String ghiChu){this.ghiChu = ghiChu;}
 }
 

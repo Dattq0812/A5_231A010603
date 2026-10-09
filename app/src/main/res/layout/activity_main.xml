@@ -46,7 +46,6 @@
             android:hint="@string/hint_email"
             android:importantForAutofill="no"
             android:inputType="textEmailAddress" />
-
         <Button
             android:id="@+id/btnChiTiet"
             android:layout_width="match_parent"
@@ -102,6 +101,7 @@
                 android:layout_weight="1"
                 android:text="@string/share" />
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>
 

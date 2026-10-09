@@ -6,6 +6,7 @@
     <string name="hint_name">Họ và tên</string>
     <string name="hint_phone">Số điện thoại</string>
     <string name="hint_email">Email</string>
+    <string name="hint_note">Ghi Chú</string>
     <string name="open_detail">Xem chi tiết (mở màn hình 2)</string>
     <string name="returned_none">Chưa có dữ liệu trả về</string>
     <string name="returned">Màn hình 2 trả về: %1$s</string>
@@ -27,4 +28,5 @@
     <string name="share_subject">Thông tin liên hệ</string>
     <string name="share_text">Liên hệ: %1$s – %2$s</string>
     <string name="share_title">Chia sẻ qua</string>
+    <string name="btnThemghichu">Thêm ghi chú</string>
 </resources>
